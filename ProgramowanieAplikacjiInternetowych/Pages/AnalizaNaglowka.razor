@@ -1,0 +1,15 @@
+﻿@inject IJSRuntime JSRuntime
+@page "/zad5"
+<h3>AnalizaNaglowka</h3>
+<button class="btn-primary" @onclick="(async() => await IdentifyBrowser())">Wyświetl informacje</button>
+
+
+@code {
+    private string _browserName = string.Empty;
+
+    private async Task IdentifyBrowser()
+    {
+        
+        _browserName = await JSRuntime.InvokeAsync<string>("identifyBrowser");
+    }
+}

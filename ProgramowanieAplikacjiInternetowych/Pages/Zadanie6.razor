@@ -1,0 +1,97 @@
+﻿@page "/zad6"
+@using Microsoft.AspNetCore.WebUtilities;
+@using Microsoft.Extensions.Primitives;
+@inject NavigationManager NavigationManager
+<h3>Zadanie6</h3>
+
+@if (string.IsNullOrEmpty(error))
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>Pesel</th>
+                @if (!string.IsNullOrEmpty(telefon))
+                {
+                    <th>Telefon</th>
+                }
+                @if (!string.IsNullOrEmpty(email))
+                {
+                    <th>E-mail</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@imie</td>
+                <td>@nazwisko</td>
+                <td>@pesel</td>
+                @if (!string.IsNullOrEmpty(telefon))
+                {
+                    <td>@telefon</td>
+                }
+                @if (!string.IsNullOrEmpty(email))
+                {
+                    <td>@email</td>
+                }
+            </tr>
+        </tbody>
+    </table>
+}
+else{
+    <h3>Wystąpiły następujące błędy: @error</h3>
+}
+
+@code {
+    private string imie = string.Empty;
+    private string nazwisko = string.Empty;
+    private string pesel = string.Empty;
+    private string telefon = string.Empty;
+    private string email = string.Empty;
+
+    private string error = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        var query = new Uri(NavigationManager.Uri).Query;
+        var parsedQuery = QueryHelpers.ParseQuery(query);
+        SetupEmail(parsedQuery);
+        SetupImie(parsedQuery);
+        SetupNazwisko(parsedQuery);
+        SetupPesel(parsedQuery);
+        SetupTelefon(parsedQuery);
+    }
+
+    private void SetupEmail(Dictionary<string, StringValues> parsedQuery)
+    {
+        if (parsedQuery.TryGetValue(nameof(email), out var imieString))
+            email = imieString.First();
+    }
+    private void SetupImie(Dictionary<string, StringValues> parsedQuery)
+    {
+        if (parsedQuery.TryGetValue(nameof(imie), out var imieString))
+            imie = imieString.First();
+        else
+            error += "\n Nie podano imienia";
+    }
+    private void SetupNazwisko(Dictionary<string, StringValues> parsedQuery)
+    {
+        if (parsedQuery.TryGetValue(nameof(nazwisko), out var imieString))
+            nazwisko = imieString.First();
+        else
+            nazwisko += "\n Nie podano nazwiska";
+    }
+    private void SetupTelefon(Dictionary<string, StringValues> parsedQuery)
+    {
+        if (parsedQuery.TryGetValue(nameof(telefon), out var imieString))
+            telefon = imieString.First();
+    }
+    private void SetupPesel(Dictionary<string, StringValues> parsedQuery)
+    {
+        if (parsedQuery.TryGetValue(nameof(pesel), out var imieString))
+            pesel = imieString.First();
+        else
+            error += "\n Nie podano numeru PESEL";
+    }
+}
